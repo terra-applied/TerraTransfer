@@ -23,9 +23,31 @@
 </head>
 <body>
 
+<!-- ============================== NAVBAR ============================== -->
+<nav class="navbar is-dark is-fixed-top" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a class="navbar-item has-text-weight-bold" href="#">TerraTransfer</a>
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navMenu"
+       onclick="this.classList.toggle('is-active'); document.getElementById('navMenu').classList.toggle('is-active');">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div id="navMenu" class="navbar-menu">
+    <div class="navbar-end">
+      <a class="navbar-item" href="#abstract">Abstract</a>
+      <a class="navbar-item" href="#method">Method</a>
+      <a class="navbar-item" href="#results">Results</a>
+      <a class="navbar-item" href="#qualitative">Rollout Videos</a>
+      <a class="navbar-item" href="#BibTeX">BibTeX</a>
+    </div>
+  </div>
+</nav>
+
 <!-- ============================== HERO ============================== -->
 <section class="hero">
-  <div class="hero-body">
+  <div class="hero-body" style="padding-top: 6rem;">
     <div class="container is-max-desktop">
       <div class="columns is-centered">
         <div class="column has-text-centered">
@@ -51,11 +73,11 @@
 
           <div class="column has-text-centered">
             <div class="publication-links">
-              <!-- arXiv (coming soon) -->
+              <!-- arXiv -->
               <span class="link-block">
-                <a class="external-link button is-normal is-rounded is-dark" disabled title="Coming soon">
+                <a href="https://arxiv.org/abs/2606.17386" target="_blank" rel="noopener noreferrer" class="external-link button is-normal is-rounded is-dark">
                   <span class="icon"><i class="ai ai-arxiv"></i></span>
-                  <span>arXiv (coming soon)</span>
+                  <span>arXiv</span>
                 </a>
               </span>
               <!-- Code (coming soon) -->
@@ -90,7 +112,7 @@
 </section>
 
 <!-- ============================== ABSTRACT ============================== -->
-<section class="section">
+<section class="section" id="abstract">
   <div class="container is-max-desktop">
     <div class="columns is-centered has-text-centered">
       <div class="column is-four-fifths">
@@ -123,7 +145,7 @@
 </section>
 
 <!-- ============================== METHOD (placeholder) ============================== -->
-<section class="section">
+<section class="section" id="method">
   <div class="container is-max-desktop">
     <div class="columns is-centered has-text-centered">
       <div class="column is-four-fifths">
@@ -233,7 +255,7 @@
 </section>
 
 <!-- ============================== RESULTS (placeholder) ============================== -->
-<section class="section">
+<section class="section" id="results">
   <div class="container is-max-desktop">
     <div class="columns is-centered has-text-centered">
       <div class="column is-four-fifths">
@@ -342,11 +364,11 @@
 </section>
 
 <!-- ============================== QUALITATIVE (placeholder) ============================== -->
-<section class="section">
+<section class="section" id="qualitative">
   <div class="container is-fluid">
     <div class="columns is-centered has-text-centered">
       <div class="column is-full" style="max-width:2048px;">
-        <h2 class="title is-3">Qualitative Rollouts</h2>
+        <h2 class="title is-3">Rollout Videos</h2>
         <div class="columns is-multiline">
           <div class="column is-half">
             <video class="rollout-video" muted loop playsinline controls width="100%">
@@ -402,7 +424,7 @@
   title   = {TerraTransfer: Learning End-to-End Driving Policies Without Expert Demonstrations},
   author  = {Xiong, Zikang and Li, Weixin and Wu, Zhouchonghao and Rangesh, Akshay
              and Bonde, Saarth and Hall, Grantland and Tang, Chen and Hu, Yihan and Zhan, Wei},
-  journal = {arXiv preprint arXiv:XXXX.XXXXX},
+  journal = {arXiv preprint arXiv:2606.17386},
   year    = {2026}
 }</code></pre>
   </div>

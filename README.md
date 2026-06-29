@@ -4,19 +4,41 @@ Project website for **TerraTransfer: Learning End-to-End Driving Policies Withou
 
 Live at: https://zikang-xiong-ai.github.io/terratransfer
 
+Styled with the Applied Intuition brand design system, consistent with the
+[TerraZero](https://terrazero.github.io/) project page.
+
 ## Structure
-- `index.html` — single-page site (Nerfies-style layout, Bulma CSS via CDN)
-- `static/css/index.css` — page styles
-- `static/js/index.js` — interactive elements (added as needed)
-- `static/images/`, `static/videos/` — figures and rollout clips (to be added)
+
+```
+index.html               # single-page site
+assets/css/styles.css    # design system (Applied Intuition brand)
+assets/js/main.js        # nav, scroll-spy, scroll-reveal, BibTeX copy
+assets/fonts/            # Applied Sans + XCharter (vendored)
+assets/brand/            # favicons + brand icon
+assets/figures/          # pipeline + SVD-spectrum figures
+assets/videos/           # teaser + closed-loop rollout clips
+serve.py                 # local preview server (127.0.0.1:8138)
+```
+
+## Preview locally
+
+```sh
+python serve.py        # or: uv run serve.py
+```
+
+Then open http://127.0.0.1:8138. The server disables caching, so edits show on
+reload. Override the port with `--port`.
 
 ## Editing
+
 The page is static HTML — no build step. Edit `index.html` and push to `main`;
 GitHub Pages serves it automatically.
 
-Placeholders to fill in: arXiv/PDF/code/video links, teaser, pipeline figure,
-results table, and qualitative rollout videos.
+The page carries real content: the two-phase pipeline and SVD-spectrum figures,
+the HUGSim closed-loop results table, the demo teaser, and the closed-loop
+rollout videos. The code link is greyed out until release.
 
 ## Credit
-Built on the [Nerfies project page](https://github.com/nerfies/nerfies.github.io)
-(CC BY-SA 4.0).
+
+Design system shared with the [TerraZero project page](https://terrazero.github.io/)
+(Applied Intuition brand).

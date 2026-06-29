@@ -1,437 +1,332 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>TerraTransfer: Learning End-to-End Driving Policies Without Expert Demonstrations</title>
-  <meta name="description"
-        content="TerraTransfer: a demonstration-free recipe for end-to-end driving. Learn to drive by self-play in a vectorized simulator, then align a vision policy to the frozen teacher.">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>TerraTransfer: Learning End-to-End Driving Policies Without Expert Demonstrations</title>
+<meta name="description" content="TerraTransfer: a demonstration-free recipe for end-to-end driving. Learn to drive by self-play in a vectorized simulator, then align a vision policy to the frozen teacher.">
+<meta name="theme-color" content="#006CFA">
 
-  <!-- Open Graph / social preview -->
-  <meta property="og:title" content="TerraTransfer: Learning End-to-End Driving Policies Without Expert Demonstrations"/>
-  <meta property="og:description" content="A demonstration-free recipe for end-to-end driving via self-play and vision alignment."/>
-  <meta property="og:type" content="website"/>
-  <!-- <meta property="og:image" content="static/images/teaser.png"/> -->
+<!-- Open Graph / social preview -->
+<meta property="og:title" content="TerraTransfer: Learning End-to-End Driving Policies Without Expert Demonstrations"/>
+<meta property="og:description" content="A demonstration-free recipe for end-to-end driving via self-play and vision alignment."/>
+<meta property="og:type" content="website"/>
+<!-- <meta property="og:image" content="assets/figures/teaser.png"/> -->
 
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚗</text></svg>">
+<link rel="icon" href="assets/brand/favicon.ico" sizes="32x32">
+<link rel="icon" href="assets/brand/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/brand/apple-touch-icon.png">
 
-  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
-  <link rel="stylesheet" href="./static/css/index.css">
+<script>document.documentElement.className += " js";</script>
+<link rel="stylesheet" href="assets/css/styles.css">
 </head>
 <body>
 
-<!-- ============================== NAVBAR ============================== -->
-<nav class="navbar is-dark is-fixed-top" role="navigation" aria-label="main navigation">
-  <div class="navbar-brand">
-    <a class="navbar-item has-text-weight-bold" href="#">TerraTransfer</a>
-    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navMenu"
-       onclick="this.classList.toggle('is-active'); document.getElementById('navMenu').classList.toggle('is-active');">
-      <span aria-hidden="true"></span>
-      <span aria-hidden="true"></span>
-      <span aria-hidden="true"></span>
-    </a>
+<!-- ===================== Header ===================== -->
+<header class="site-header">
+  <div class="wide">
+    <a class="brand-mark" href="https://www.appliedintuition.com/research" target="_blank" rel="noopener">TerraTransfer</a>
+    <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <nav class="nav" id="nav">
+      <a href="#abstract">Abstract</a>
+      <a href="#method">Method</a>
+      <a href="#results">Results</a>
+      <a href="#qualitative">Rollouts</a>
+      <a href="#terra-series">Terra Series</a>
+      <a href="#bibtex">BibTeX</a>
+    </nav>
   </div>
-  <div id="navMenu" class="navbar-menu">
-    <div class="navbar-end">
-      <a class="navbar-item" href="#abstract">Abstract</a>
-      <a class="navbar-item" href="#method">Method</a>
-      <a class="navbar-item" href="#results">Results</a>
-      <a class="navbar-item" href="#qualitative">Rollout Videos</a>
-      <a class="navbar-item" href="#BibTeX">BibTeX</a>
-    </div>
-  </div>
-</nav>
+</header>
 
-<!-- ============================== HERO ============================== -->
+<main id="top">
+
+<!-- ===================== Hero ===================== -->
 <section class="hero">
-  <div class="hero-body" style="padding-top: 6rem;">
-    <div class="container is-max-desktop">
-      <div class="columns is-centered">
-        <div class="column has-text-centered">
-          <h1 class="title is-1 publication-title">TerraTransfer:<br>Learning End-to-End Driving Policies Without Expert Demonstrations</h1>
+  <div class="wide">
+    <div class="hero-intro">
+      <p class="eyebrow">Applied Intuition · Technical Report</p>
+      <h1>TerraTransfer: Learning End-to-End Driving Policies <span class="accent">Without Expert Demonstrations</span></h1>
+      <p class="lead">A demonstration-free recipe for end-to-end driving: learn to drive by <mark class="hl">self-play</mark> in a vectorized simulator, then <mark class="hl">align a vision policy</mark> to the frozen teacher &mdash; no expert supervision at any stage.</p>
 
-          <div class="is-size-5 publication-authors">
-            <span class="author-block"><a href="https://xiong.zikang.me/" target="_blank" rel="noopener noreferrer">Zikang Xiong</a><sup>1</sup>,</span>
-            <span class="author-block"><a href="https://scholar.google.com/citations?user=99Cyd0YAAAAJ" target="_blank" rel="noopener noreferrer">Weixin Li</a><sup>1</sup>,</span>
-            <span class="author-block"><a href="https://scholar.google.com/citations?user=pfQtUzEAAAAJ" target="_blank" rel="noopener noreferrer">Zhouchonghao Wu</a><sup>1</sup>,</span>
-            <span class="author-block"><a href="https://arangesh.github.io/" target="_blank" rel="noopener noreferrer">Akshay Rangesh</a><sup>1</sup>,</span>
-            <span class="author-block"><a href="https://www.linkedin.com/in/saarth-bonde-a4692b145/" target="_blank" rel="noopener noreferrer">Saarth Bonde</a><sup>1</sup>,</span>
-            <span class="author-block"><a href="https://www.grantlandhall.com/" target="_blank" rel="noopener noreferrer">Grantland Hall</a><sup>1</sup>,</span>
-            <span class="author-block"><a href="https://chentangmark.github.io/" target="_blank" rel="noopener noreferrer">Chen Tang</a><sup>2</sup>,</span>
-            <span class="author-block"><a href="https://scholar.google.com/citations?user=lf0bLigAAAAJ" target="_blank" rel="noopener noreferrer">Yihan Hu</a><sup>1</sup>,</span>
-            <span class="author-block"><a href="https://zhanwei.site/" target="_blank" rel="noopener noreferrer">Wei Zhan</a><sup>1,3</sup></span>
-          </div>
+      <div class="hero-meta">
+        <p class="byline">
+          <span class="names">
+            <a href="https://xiong.zikang.me/" target="_blank" rel="noopener">Zikang Xiong</a><sup>1</sup>,
+            <a href="https://scholar.google.com/citations?user=99Cyd0YAAAAJ" target="_blank" rel="noopener">Weixin Li</a><sup>1</sup>,
+            <a href="https://scholar.google.com/citations?user=pfQtUzEAAAAJ" target="_blank" rel="noopener">Zhouchonghao Wu</a><sup>1</sup>,
+            <a href="https://arangesh.github.io/" target="_blank" rel="noopener">Akshay Rangesh</a><sup>1</sup>,
+            <a href="https://www.linkedin.com/in/saarth-bonde-a4692b145/" target="_blank" rel="noopener">Saarth Bonde</a><sup>1</sup>,
+            <a href="https://www.grantlandhall.com/" target="_blank" rel="noopener">Grantland Hall</a><sup>1</sup>,
+            <a href="https://chentangmark.github.io/" target="_blank" rel="noopener">Chen Tang</a><sup>2</sup>,
+            <a href="https://scholar.google.com/citations?user=lf0bLigAAAAJ" target="_blank" rel="noopener">Yihan Hu</a><sup>1</sup>,
+            <a href="https://zhanwei.site/" target="_blank" rel="noopener">Wei Zhan</a><sup>1,3</sup>
+          </span>
+        </p>
+        <p class="affil"><sup>1</sup> Applied Intuition &nbsp;·&nbsp; <sup>2</sup> UCLA &nbsp;·&nbsp; <sup>3</sup> UC Berkeley</p>
 
-          <div class="is-size-5 publication-authors">
-            <span class="author-block"><sup>1</sup>Applied Intuition</span>
-            <span class="author-block"><sup>2</sup>UCLA</span>
-            <span class="author-block"><sup>3</sup>UC Berkeley</span>
-          </div>
-
-          <div class="column has-text-centered">
-            <div class="publication-links">
-              <!-- arXiv -->
-              <span class="link-block">
-                <a href="https://arxiv.org/abs/2606.17386" target="_blank" rel="noopener noreferrer" class="external-link button is-normal is-rounded is-dark">
-                  <span class="icon"><i class="ai ai-arxiv"></i></span>
-                  <span>arXiv</span>
-                </a>
-              </span>
-              <!-- Code (coming soon) -->
-              <span class="link-block">
-                <a class="external-link button is-normal is-rounded is-dark" disabled title="Coming soon">
-                  <span class="icon"><i class="fab fa-github"></i></span>
-                  <span>Code (coming soon)</span>
-                </a>
-              </span>
-            </div>
-          </div>
+        <div class="actions">
+          <a class="btn btn-primary" href="https://arxiv.org/abs/2606.17386" target="_blank" rel="noopener">arXiv</a>
+          <span class="btn btn-disabled" aria-disabled="true">Code (coming soon)</span>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ============================== TEASER ============================== -->
-<section class="hero teaser">
-  <div class="container is-fluid">
-    <div class="hero-body has-text-centered">
-      <video id="teaser-video" playsinline controls style="width:100%; max-width:2048px;">
-        <source src="./static/videos/demo.mp4" type="video/mp4">
+<!-- ===================== Teaser + Abstract ===================== -->
+<section id="abstract">
+  <div class="wide reveal">
+    <div class="video-frame teaser-frame">
+      <video id="teaser-video" autoplay muted loop playsinline controls controlslist="nodownload" preload="metadata">
+        <source src="assets/videos/demo.mp4" type="video/mp4">
         Your browser does not support the video tag.
       </video>
-      <h2 class="subtitle has-text-centered">
-        <strong>TerraTransfer</strong> learns to drive by self-play in <strong>TerraZero</strong>,
-        then transfers that competence to a vision policy &mdash; with no expert demonstrations at any stage.
-      </h2>
+    </div>
+    <p class="muted" style="margin-top:var(--space-2);text-align:center">
+      <strong>TerraTransfer</strong> learns to drive by self-play in <strong>TerraZero</strong>, then transfers
+      that competence to a vision policy &mdash; with no expert supervision at any stage.
+    </p>
+
+    <p class="eyebrow" style="margin-top:var(--space-5)">Abstract</p>
+    <h2>Decoupling Learning to Drive From Learning to See</h2>
+    <div>
+      <p>
+        End-to-end autonomous driving has achieved state-of-the-art performance on benchmarks
+        and real-world deployments. Its standard training recipe, however, is expensive across
+        all stages: collecting and labeling millions of driving frames is costly, and closed-loop
+        RL on images is bottlenecked by the per-step cost of photorealistic rendering plus a
+        forward pass through a large vision backbone. Self-play in vectorized simulators changes
+        the economics: millions of rollout steps per second, and a state distribution naturally
+        rich in collisions, near-misses, and recoveries that no driving log contains.
+      </p>
+      <p>
+        Our approach exploits this asymmetry by decoupling <em>learning to drive</em> from
+        <em>learning to see</em>. We pretrain a single policy by self-play, then align its latent
+        space with a pretrained vision backbone, through the action KL divergence and a
+        batch-relational low-rank structural loss. The action target comes from the self-play
+        policy, so alignment never supervises against a logged trajectory: a paired dataset of
+        (image, scene-state) frames suffices, with no need for the curated expert demonstrations
+        that imitation pretraining is built on. On photorealistic 3D Gaussian splatting
+        closed-loop scenarios, the resulting end-to-end policy matches or exceeds prior
+        end-to-end methods.
+      </p>
     </div>
   </div>
 </section>
 
-<!-- ============================== ABSTRACT ============================== -->
-<section class="section" id="abstract">
-  <div class="container is-max-desktop">
-    <div class="columns is-centered has-text-centered">
-      <div class="column is-four-fifths">
-        <h2 class="title is-3">Abstract</h2>
-        <div class="content has-text-justified">
-          <p>
-            End-to-end autonomous driving has achieved state-of-the-art performance on benchmarks
-            and real-world deployments. Its standard training recipe, however, is expensive across
-            all stages: collecting and labeling millions of driving frames is costly, and closed-loop
-            RL on images is bottlenecked by the per-step cost of photorealistic rendering plus a
-            forward pass through a large vision backbone. Self-play in vectorized simulators changes
-            the economics: millions of rollout steps per second, and a state distribution naturally
-            rich in collisions, near-misses, and recoveries that no driving log contains.
-          </p>
-          <p>
-            Our approach exploits this asymmetry by decoupling <em>learning to drive</em> from
-            <em>learning to see</em>. We pretrain a single policy by self-play, then align its latent
-            space with a pretrained vision backbone, through the action KL divergence and a
-            batch-relational low-rank structural loss. The action target comes from the self-play
-            policy, so alignment never supervises against a logged trajectory: a paired dataset of
-            (image, scene-state) frames suffices, with no need for the curated expert demonstrations
-            that imitation pretraining is built on. On photorealistic 3D Gaussian splatting
-            closed-loop scenarios, the resulting end-to-end policy matches or exceeds prior
-            end-to-end methods.
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+<!-- ===================== Method ===================== -->
+<section id="method">
+  <div class="wide reveal">
+    <p class="eyebrow">Method</p>
+    <h2>A Two-Phase Pipeline</h2>
 
-<!-- ============================== METHOD (placeholder) ============================== -->
-<section class="section" id="method">
-  <div class="container is-max-desktop">
-    <div class="columns is-centered has-text-centered">
-      <div class="column is-four-fifths">
-        <h2 class="title is-3">Method</h2>
-        <figure class="image">
-          <img src="./static/images/pipeline.png" alt="TerraTransfer two-phase training pipeline">
-        </figure>
-        <p class="is-size-6 has-text-grey" style="margin-top:0.5rem;">
-          <strong>Two-phase training pipeline.</strong> Flame icons mark trainable modules,
-          snowflakes mark frozen ones; red arrows carry gradients, blue arrows do not.
+    <div class="split split--rev">
+      <div class="split-text">
+        <p>
+          <strong>Phase&nbsp;1 &mdash; Learn to drive (self-play).</strong> A single policy is
+          trained end-to-end with PPO by multi-agent self-play in <strong>TerraZero</strong>, our
+          vectorized simulator. One shared parameter set controls every agent in the scene, so the
+          interaction distribution &mdash; collisions, near-misses, recoveries &mdash; co-evolves
+          with the policy. Ego, map, and partner encoders feed a shared trunk and an action head;
+          per-episode reward weights are sampled and exposed to the policy, yielding a single agent
+          that spans a continuum of driving preferences.
         </p>
-        <div class="content has-text-justified" style="margin-top:1.5rem;">
-          <p>
-            <strong>Phase&nbsp;1 &mdash; Learn to drive (self-play).</strong> A single policy is
-            trained end-to-end with PPO by multi-agent self-play in <strong>TerraZero</strong>, our
-            vectorized simulator. One shared parameter set controls every agent in the scene, so the
-            interaction distribution &mdash; collisions, near-misses, recoveries &mdash; co-evolves
-            with the policy. Ego, map, and partner encoders feed a shared trunk and an action head;
-            per-episode reward weights are sampled and exposed to the policy, yielding a single agent
-            that spans a continuum of driving preferences.
-          </p>
-          <p>
-            <strong>Phase&nbsp;2 &mdash; Learn to see (vision alignment).</strong> The Phase-1 policy
-            is frozen and used purely as a source of per-frame supervision. For each log frame, a
-            frozen DINOv3 backbone extracts image features, and two linear adapters map them to the
-            road and partner features the policy consumes, while the ego encoder and action head are
-            inherited and kept frozen. Two losses tie student to teacher: a <strong>structural loss</strong>
-            that matches the teacher's relational scene geometry within its low-rank subspace, and an
-            <strong>action loss</strong> (KL) on the output action distribution. No logged ego
-            trajectory is ever used as a supervision target.
-          </p>
-          <p>
-            The two loss terms are also complementary: action-only reaches 0.319 and structural-only
-            0.307, but combined they reach <strong>0.490</strong>. The batch-wise subspace is itself
-            principled &mdash; at batch size 1024 it faithfully recovers the dominant teacher modes while
-            still separating small geometric scene perturbations (see appendix diagnostics).
-          </p>
-        </div>
-
-        <div class="columns is-vcentered" style="margin-top:1rem;">
-          <div class="column is-two-thirds content has-text-justified">
-            <h3 class="title is-5">Why a low-rank, batch-relational loss?</h3>
-            <p>
-              The teacher's pooled map and partner features are sharply <strong>low-rank</strong>: though
-              parameterized in 64 dimensions, just 9 (map) and 13 (partner) directions capture 80% of their
-              energy (right). Naively matching all coordinates would force the vision student to fit the
-              structureless tail &mdash; the low-variance directions a good denoiser discards as noise.
-            </p>
-            <p>
-              So instead of copying the teacher's absolute coordinates, we match its <strong>relational
-              structure</strong>: within each batch we project both sides onto the teacher's top
-              singular directions, then align the matrix of pairwise scene-to-scene similarities. The
-              student only has to reproduce <em>which scenes the teacher treats as alike</em> &mdash; in the
-              subspace that actually carries information &mdash; leaving the coordinate frame and noisy tail free.
-            </p>
-          </div>
-          <div class="column is-one-third has-text-centered">
-            <figure class="image">
-              <img src="./static/images/svd_latent_rank.png" alt="Singular value spectra of the teacher features">
-            </figure>
-            <p class="is-size-7 has-text-grey">
-              Singular-value spectra of the teacher's partner and map features; dashed lines mark the
-              80% cumulative-energy cutoffs (k<sub>p</sub>=13, k<sub>r</sub>=9).
-            </p>
-          </div>
-        </div>
-
-        <div class="columns is-centered" style="margin-top:1rem;">
-          <div class="column is-two-thirds">
-            <p class="is-size-6 has-text-centered" style="margin-bottom:0.75rem;">
-              Sweeping the projection rank confirms it: the low-rank subspace beats matching
-              <em>all</em> coordinates, while too-low a rank discards useful geometry.
-            </p>
-            <div class="table-container">
-              <table class="table is-fullwidth is-narrow is-hoverable">
-                <thead>
-                  <tr>
-                    <th>Structural target</th>
-                    <th class="has-text-centered">HD-Score</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>Lower rank (k<sub>p</sub>=7, k<sub>r</sub>=5)</td>
-                    <td class="has-text-centered">0.417</td>
-                  </tr>
-                  <tr class="has-background-primary-light">
-                    <td><strong>Low-rank subspace (k<sub>p</sub>=13, k<sub>r</sub>=9, headline)</strong></td>
-                    <td class="has-text-centered"><strong>0.490</strong></td>
-                  </tr>
-                  <tr>
-                    <td>Higher rank (k<sub>p</sub>=26, k<sub>r</sub>=18)</td>
-                    <td class="has-text-centered">0.484</td>
-                  </tr>
-                  <tr>
-                    <td>Full coordinate space (all directions)</td>
-                    <td class="has-text-centered">0.444</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
+        <p>
+          <strong>Phase&nbsp;2 &mdash; Learn to see (vision alignment).</strong> The Phase-1 policy
+          is frozen and used purely as a source of per-frame supervision. For each log frame, a
+          frozen DINOv3 backbone extracts image features, and two linear adapters map them to the
+          road and partner features the policy consumes, while the ego encoder and action head are
+          inherited and kept frozen. Two losses tie student to teacher: a <strong>structural loss</strong>
+          that matches the teacher's relational scene geometry within its low-rank subspace, and an
+          <strong>action loss</strong> (KL) on the output action distribution. No logged ego
+          trajectory is ever used as a supervision target. The two terms are complementary:
+          action-only reaches 0.319 and structural-only 0.307, but combined they reach
+          <strong>0.490</strong>.
+        </p>
       </div>
+      <figure class="figure">
+        <div class="figure-stage">
+          <img src="assets/figures/pipeline.png" alt="TerraTransfer two-phase training pipeline" loading="lazy">
+        </div>
+        <figcaption><span class="fig-label">Figure 1.</span> Two-phase training pipeline. Flame icons mark trainable modules, snowflakes mark frozen ones; red arrows carry gradients, blue arrows do not.</figcaption>
+      </figure>
+    </div>
+
+    <div class="split" style="margin-top:var(--space-4)">
+      <div class="split-text">
+        <h3 style="margin-top:0">Why a low-rank, batch-relational loss?</h3>
+        <p>
+          The teacher's pooled map and partner features are sharply <strong>low-rank</strong>: though
+          parameterized in 64 dimensions, just 9 (map) and 13 (partner) directions capture 80% of their
+          energy. Naively matching all coordinates would force the vision student to fit the
+          structureless tail &mdash; the low-variance directions a good denoiser discards as noise.
+        </p>
+        <p>
+          So instead of copying the teacher's absolute coordinates, we match its <strong>relational
+          structure</strong>: within each batch we project both sides onto the teacher's top
+          singular directions, then align the matrix of pairwise scene-to-scene similarities. The
+          student only has to reproduce <em>which scenes the teacher treats as alike</em> &mdash; in the
+          subspace that actually carries information &mdash; leaving the coordinate frame and noisy tail free.
+        </p>
+      </div>
+      <figure class="figure">
+        <div class="figure-stage">
+          <img src="assets/figures/svd_latent_rank.png" alt="Singular value spectra of the teacher features" loading="lazy" style="width:50%">
+        </div>
+        <figcaption><span class="fig-label">Figure 2.</span> Singular-value spectra of the teacher's partner and map features; dashed lines mark the 80% cumulative-energy cutoffs (k<sub>p</sub>=13, k<sub>r</sub>=9).</figcaption>
+      </figure>
+    </div>
+
+    <p class="table-lead" style="margin-top:var(--space-4)"><em>Sweeping the projection rank confirms it: the low-rank subspace beats matching <em>all</em> coordinates, while too-low a rank discards useful geometry.</em></p>
+    <div class="table-wrap">
+      <table class="data">
+        <thead>
+          <tr><th>Structural target</th><th>HD-Score</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Lower rank (k<sub>p</sub>=7, k<sub>r</sub>=5)</td><td>0.417</td></tr>
+          <tr class="is-best"><td>Low-rank subspace (k<sub>p</sub>=13, k<sub>r</sub>=9, headline)</td><td>0.490</td></tr>
+          <tr><td>Higher rank (k<sub>p</sub>=26, k<sub>r</sub>=18)</td><td>0.484</td></tr>
+          <tr><td>Full coordinate space (all directions)</td><td>0.444</td></tr>
+        </tbody>
+        <caption><span class="fig-label">Table 1.</span> Projection-rank sweep for the structural target, scored by closed-loop HD-Score on HUGSim.</caption>
+      </table>
     </div>
   </div>
 </section>
 
-<!-- ============================== RESULTS (placeholder) ============================== -->
-<section class="section" id="results">
-  <div class="container is-max-desktop">
-    <div class="columns is-centered has-text-centered">
-      <div class="column is-four-fifths">
-        <h2 class="title is-3">Results</h2>
-        <div class="content has-text-justified">
-          <p>
-            We evaluate on <strong>HUGSim</strong>, a photorealistic 3D Gaussian-splatting closed-loop
-            benchmark over 88 nuScenes-derived scenarios across four difficulty tiers, and report the
-            aggregate closed-loop <strong>HD-Score</strong> (higher is better). Our vision policy is
-            aligned on nuPlan and evaluated on nuScenes scenarios, so these scores also reflect
-            cross-dataset generalization.
-          </p>
-        </div>
-        <div class="table-container">
-          <table class="table is-fullwidth is-hoverable">
-            <thead>
-              <tr>
-                <th>Method</th>
-                <th class="has-text-centered">Easy</th>
-                <th class="has-text-centered">Medium</th>
-                <th class="has-text-centered">Hard</th>
-                <th class="has-text-centered">Extreme</th>
-                <th class="has-text-centered">All</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>UniAD</td>
-                <td class="has-text-centered">0.367</td>
-                <td class="has-text-centered">0.198</td>
-                <td class="has-text-centered">0.249</td>
-                <td class="has-text-centered">0.109</td>
-                <td class="has-text-centered">0.224</td>
-              </tr>
-              <tr>
-                <td>VAD</td>
-                <td class="has-text-centered">0.400</td>
-                <td class="has-text-centered">0.228</td>
-                <td class="has-text-centered">0.242</td>
-                <td class="has-text-centered">0.095</td>
-                <td class="has-text-centered">0.239</td>
-              </tr>
-              <tr>
-                <td>LTF</td>
-                <td class="has-text-centered">0.634</td>
-                <td class="has-text-centered">0.391</td>
-                <td class="has-text-centered">0.289</td>
-                <td class="has-text-centered">0.098</td>
-                <td class="has-text-centered">0.360</td>
-              </tr>
-              <tr>
-                <td>ECO (Smoothing-only)</td>
-                <td class="has-text-centered">0.764</td>
-                <td class="has-text-centered">0.416</td>
-                <td class="has-text-centered">0.405</td>
-                <td class="has-text-centered"><strong>0.255</strong></td>
-                <td class="has-text-centered">0.452</td>
-              </tr>
-              <tr>
-                <td>ECO (Smoothing + Re-time)</td>
-                <td class="has-text-centered">0.720</td>
-                <td class="has-text-centered">0.388</td>
-                <td class="has-text-centered">0.342</td>
-                <td class="has-text-centered">0.236</td>
-                <td class="has-text-centered">0.415</td>
-              </tr>
-              <tr class="is-italic has-background-light">
-                <td>Self-play teacher (ref., privileged state)</td>
-                <td class="has-text-centered">0.780</td>
-                <td class="has-text-centered">0.497</td>
-                <td class="has-text-centered">0.639</td>
-                <td class="has-text-centered">0.185</td>
-                <td class="has-text-centered">0.520</td>
-              </tr>
-              <tr class="has-background-primary-light">
-                <td><strong>TerraTransfer (Ours)</strong></td>
-                <td class="has-text-centered"><strong>0.769</strong></td>
-                <td class="has-text-centered"><strong>0.501</strong></td>
-                <td class="has-text-centered"><strong>0.560</strong></td>
-                <td class="has-text-centered">0.150</td>
-                <td class="has-text-centered"><strong>0.490</strong></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div class="content has-text-justified">
-          <p class="is-size-6">
-            <strong>Bold</strong> marks the best per column among comparison methods. The
-            <em>italicized</em> self-play teacher drives from privileged vectorized state (not images)
-            and is excluded from best-per-column counts. Our vision policy is the strongest method on
-            aggregate (<strong>0.490 All</strong>) &mdash; beating the best imitation-trained baseline,
-            LTF, by 0.130 and the strongest ECO variant by 0.038 &mdash; while approaching its own
-            teacher (0.520) <em>without any logged-trajectory supervision</em>.
-          </p>
-          <p class="is-size-6">
-            The main exception is the <strong>Extreme</strong> tier, where ECO leads. These scenarios are
-            strongly <em>out of distribution</em>: surrounding vehicles may actively collide with the ego,
-            and in some cases pass through other vehicles before doing so. Our policy responds
-            conservatively, which preserves safe behavior but often sacrifices route completion &mdash; the
-            resulting low route completion pulls down the aggregate HD-Score on this split.
-          </p>
-        </div>
-      </div>
+<!-- ===================== Results ===================== -->
+<section id="results">
+  <div class="wide reveal">
+    <p class="eyebrow">Results</p>
+    <h2>Closed-Loop Driving on HUGSim</h2>
+    <p>
+      We evaluate on <strong>HUGSim</strong>, a photorealistic 3D Gaussian-splatting closed-loop
+      benchmark over 88 nuScenes-derived scenarios across four difficulty tiers, and report the
+      aggregate closed-loop <strong>HD-Score</strong> (higher is better). Our vision policy is
+      aligned on nuPlan and evaluated on nuScenes scenarios, so these scores also reflect
+      cross-dataset generalization.
+    </p>
+    <div class="table-wrap">
+      <table class="data" id="tbl-hugsim">
+        <thead>
+          <tr>
+            <th>Method</th><th>Easy</th><th>Medium</th><th>Hard</th><th>Extreme</th><th>All</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>UniAD</td><td>0.367</td><td>0.198</td><td>0.249</td><td>0.109</td><td>0.224</td></tr>
+          <tr><td>VAD</td><td>0.400</td><td>0.228</td><td>0.242</td><td>0.095</td><td>0.239</td></tr>
+          <tr><td>LTF</td><td>0.634</td><td>0.391</td><td>0.289</td><td>0.098</td><td>0.360</td></tr>
+          <tr><td>ECO (Smoothing-only)</td><td>0.764</td><td>0.416</td><td>0.405</td><td><strong>0.255</strong></td><td>0.452</td></tr>
+          <tr><td>ECO (Smoothing + Re-time)</td><td>0.720</td><td>0.388</td><td>0.342</td><td>0.236</td><td>0.415</td></tr>
+          <tr class="is-ref"><td>Self-play teacher (ref., privileged state)</td><td>0.780</td><td>0.497</td><td>0.639</td><td>0.185</td><td>0.520</td></tr>
+          <tr class="is-best"><td>TerraTransfer (Ours)</td><td><strong>0.769</strong></td><td><strong>0.501</strong></td><td><strong>0.560</strong></td><td>0.150</td><td><strong>0.490</strong></td></tr>
+        </tbody>
+        <caption><span class="fig-label">Table 2.</span> Closed-loop HD-Score on HUGSim (higher is better). <strong>Bold</strong> marks the best per column among comparison methods; the italicized self-play teacher drives from privileged vectorized state and is excluded from best-per-column counts.</caption>
+      </table>
+    </div>
+    <div>
+      <p class="muted">
+        Our vision policy is the strongest method on aggregate (<strong>0.490 All</strong>) &mdash; beating
+        the best imitation-trained baseline, LTF, by 0.130 and the strongest ECO variant by 0.038 &mdash;
+        while approaching its own teacher (0.520) <em>without any logged-trajectory supervision</em>.
+      </p>
+      <p class="muted">
+        The main exception is the <strong>Extreme</strong> tier, where ECO leads. These scenarios are
+        strongly <em>out of distribution</em>: surrounding vehicles may actively collide with the ego,
+        and in some cases pass through other vehicles before doing so. Our policy responds
+        conservatively, which preserves safe behavior but often sacrifices route completion &mdash; the
+        resulting low route completion pulls down the aggregate HD-Score on this split.
+      </p>
     </div>
   </div>
 </section>
 
-<!-- ============================== QUALITATIVE (placeholder) ============================== -->
-<section class="section" id="qualitative">
-  <div class="container is-fluid">
-    <div class="columns is-centered has-text-centered">
-      <div class="column is-full" style="max-width:2048px;">
-        <h2 class="title is-3">Rollout Videos</h2>
-        <div class="columns is-multiline">
-          <div class="column is-half">
-            <video class="rollout-video" muted loop playsinline controls width="100%">
-              <source src="./static/videos/1.mp4" type="video/mp4">
-            </video>
-          </div>
-          <div class="column is-half">
-            <video class="rollout-video" muted loop playsinline controls width="100%">
-              <source src="./static/videos/2.mp4" type="video/mp4">
-            </video>
-          </div>
-          <div class="column is-half">
-            <video class="rollout-video" muted loop playsinline controls width="100%">
-              <source src="./static/videos/3.mp4" type="video/mp4">
-            </video>
-          </div>
-          <div class="column is-half">
-            <video class="rollout-video" muted loop playsinline controls width="100%">
-              <source src="./static/videos/scene-0013-hard-00_hdscore_0.88.mp4" type="video/mp4">
-            </video>
-          </div>
-          <div class="column is-half">
-            <video class="rollout-video" muted loop playsinline controls width="100%">
-              <source src="./static/videos/scene-0051-medium-01_hdscore_0.80.mp4" type="video/mp4">
-            </video>
-          </div>
-          <div class="column is-half">
-            <video class="rollout-video" muted loop playsinline controls width="100%">
-              <source src="./static/videos/scene-0166-hard-00_hdscore_0.81.mp4" type="video/mp4">
-            </video>
-          </div>
-          <div class="column is-half">
-            <video class="rollout-video" muted loop playsinline controls width="100%">
-              <source src="./static/videos/scene-0528-hard-00_hdscore_0.81.mp4" type="video/mp4">
-            </video>
-          </div>
-          <div class="column is-half">
-            <video class="rollout-video" muted loop playsinline controls width="100%">
-              <source src="./static/videos/scene-0920-hard-00_hdscore_0.87.mp4" type="video/mp4">
-            </video>
-          </div>
-        </div>
-      </div>
+<!-- ===================== Qualitative ===================== -->
+<section id="qualitative">
+  <div class="wide reveal">
+    <p class="eyebrow">Qualitative Rollouts</p>
+    <h2>Closed-Loop Rollout Videos</h2>
+    <p class="prose">Representative closed-loop rollouts of the end-to-end vision policy on HUGSim scenarios.</p>
+    <div class="video-grid">
+      <figure>
+        <div class="video-frame"><video muted loop autoplay playsinline controls controlslist="nodownload" preload="metadata"><source src="assets/videos/1.mp4" type="video/mp4"></video></div>
+      </figure>
+      <figure>
+        <div class="video-frame"><video muted loop autoplay playsinline controls controlslist="nodownload" preload="metadata"><source src="assets/videos/2.mp4" type="video/mp4"></video></div>
+      </figure>
+      <figure>
+        <div class="video-frame"><video muted loop autoplay playsinline controls controlslist="nodownload" preload="metadata"><source src="assets/videos/3.mp4" type="video/mp4"></video></div>
+      </figure>
+      <figure>
+        <div class="video-frame"><video muted loop playsinline controls controlslist="nodownload" preload="metadata"><source src="assets/videos/scene-0013-hard-00_hdscore_0.88.mp4" type="video/mp4"></video></div>
+      </figure>
+      <figure>
+        <div class="video-frame"><video muted loop playsinline controls controlslist="nodownload" preload="metadata"><source src="assets/videos/scene-0051-medium-01_hdscore_0.80.mp4" type="video/mp4"></video></div>
+      </figure>
+      <figure>
+        <div class="video-frame"><video muted loop playsinline controls controlslist="nodownload" preload="metadata"><source src="assets/videos/scene-0166-hard-00_hdscore_0.81.mp4" type="video/mp4"></video></div>
+      </figure>
+      <figure>
+        <div class="video-frame"><video muted loop playsinline controls controlslist="nodownload" preload="metadata"><source src="assets/videos/scene-0528-hard-00_hdscore_0.81.mp4" type="video/mp4"></video></div>
+      </figure>
+      <figure>
+        <div class="video-frame"><video muted loop playsinline controls controlslist="nodownload" preload="metadata"><source src="assets/videos/scene-0920-hard-00_hdscore_0.87.mp4" type="video/mp4"></video></div>
+      </figure>
     </div>
   </div>
 </section>
 
-<!-- ============================== BIBTEX ============================== -->
-<section class="section" id="BibTeX">
-  <div class="container is-max-desktop content">
-    <h2 class="title">BibTeX</h2>
-    <pre><code>@article{xiong2026terratransfer,
+<!-- ===================== Terra Series ===================== -->
+<section id="terra-series">
+  <div class="wide reveal">
+    <p class="eyebrow">Terra Series</p>
+    <h2>Part of the Terra Series</h2>
+    <p class="prose">TerraTransfer is built on <strong>TerraZero</strong>, Applied Intuition's procedural driving simulator and self-play recipe. Its self-play planner is the teacher distilled into the end-to-end vision policy here.</p>
+  </div>
+</section>
+
+<!-- ===================== BibTeX ===================== -->
+<section id="bibtex">
+  <div class="wide reveal">
+    <p class="eyebrow">BibTeX</p>
+    <h2>Cite This Work</h2>
+    <div class="bibtex">
+      <button class="copy-btn" type="button">Copy</button>
+      <pre>@article{xiong2026terratransfer,
   title   = {TerraTransfer: Learning End-to-End Driving Policies Without Expert Demonstrations},
   author  = {Xiong, Zikang and Li, Weixin and Wu, Zhouchonghao and Rangesh, Akshay
              and Bonde, Saarth and Hall, Grantland and Tang, Chen and Hu, Yihan and Zhan, Wei},
   journal = {arXiv preprint arXiv:2606.17386},
   year    = {2026}
-}</code></pre>
+}</pre>
+    </div>
   </div>
 </section>
 
-<!-- ============================== FOOTER ============================== -->
+</main>
 
-<script src="./static/js/index.js"></script>
+<!-- ===================== Footer ===================== -->
+<footer class="site-footer">
+  <div class="wide">
+    <div class="foot-grid">
+      <div>
+        <div class="brand-mark" style="color:#fff">TerraTransfer</div>
+        <p style="max-width:42ch;color:#cfd3da">Learning end-to-end driving policies without expert demonstrations, via self-play and vision alignment.</p>
+      </div>
+      <div>
+        <p style="margin:0 0 .4rem;font-weight:600">Links</p>
+        <p style="margin:.2rem 0"><a href="https://arxiv.org/abs/2606.17386" target="_blank" rel="noopener">arXiv</a></p>
+        <p style="margin:.2rem 0"><span class="foot-pending">Code (coming soon)</span></p>
+      </div>
+    </div>
+    <p class="copyright">© 2026 Applied Intuition. All rights reserved.</p>
+  </div>
+</footer>
+
+<script src="assets/js/main.js" defer></script>
 </body>
 </html>

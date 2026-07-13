@@ -284,7 +284,84 @@
   <div class="wide reveal">
     <p class="eyebrow">Terra Series</p>
     <h2>Part of the Terra Series</h2>
-    <p class="prose">TerraTransfer is built on <strong>TerraZero</strong>, Applied Intuition's procedural driving simulator and self-play recipe. Its self-play planner is the teacher distilled into the end-to-end vision policy here.</p>
+    <div class="intg" id="integrations-widget">
+      <div class="intg-tabs" role="tablist" aria-label="Select a Terra Series project">
+        <span class="intg-slider" aria-hidden="true"></span>
+        <button type="button" class="intg-tab is-active" role="tab" id="intg-tab-terrazero"
+                aria-selected="true" aria-controls="intg-panel-terrazero">TerraZero</button>
+        <button type="button" class="intg-tab" role="tab" id="intg-tab-spacer"
+                aria-selected="false" aria-controls="intg-panel-spacer" tabindex="-1">SPACeR</button>
+      </div>
+
+      <div class="intg-stage">
+        <!-- TerraZero -->
+        <div class="intg-panel intg-panel--wide" role="tabpanel" id="intg-panel-terrazero" aria-labelledby="intg-tab-terrazero">
+          <div class="intg-text">
+            <h3>Procedural Driving Simulation for Self-Play RL at Scale</h3>
+            <p>TerraZero is the vectorized simulator and self-play recipe behind Phase&nbsp;1 of TerraTransfer: a fast object-level traffic simulator, a procedural scenario generator, and a compute-efficient self-play recipe that trains driving policies from scratch &mdash; with zero human demonstrations &mdash; and transfers them across cities and datasets. Its frozen self-play planner is the teacher distilled into the end-to-end vision policy on this page.</p>
+            <div class="series-links">
+              <a class="btn btn-primary" href="https://probable-couscous-8gy5kez.pages.github.io/" target="_blank" rel="noopener">Project Page →</a>
+            </div>
+          </div>
+          <div class="intg-showcase">
+            <div class="intg-media">
+              <video class="intg-video" muted loop playsinline preload="metadata"
+                     controls controlslist="nodownload"
+                     src="assets/videos/terrazero-selfplay.mp4"></video>
+            </div>
+          </div>
+        </div>
+
+        <!-- SPACeR -->
+        <div class="intg-panel intg-panel--wide" role="tabpanel" id="intg-panel-spacer" aria-labelledby="intg-tab-spacer" hidden>
+          <div class="intg-text">
+            <h3>Human-Like Simulation Agents via Self-Play Anchoring <span class="series-badge">ICLR 2026</span></h3>
+            <p>SPACeR anchors TerraZero's self-play RL to a pretrained tokenized reference model, making sim agents that are simultaneously human-like and reactive. The resulting policy is ~50× smaller than tokenized baselines with 10× faster inference, and outperforms prior self-play and imitation methods on the Waymo Sim Agents Challenge.</p>
+            <div class="series-links">
+              <a class="btn btn-primary" href="https://spacer-ai.github.io/" target="_blank" rel="noopener">Project Page →</a>
+              <a class="btn" href="https://arxiv.org/abs/2510.18060" target="_blank" rel="noopener">arXiv</a>
+              <a class="btn" href="https://openreview.net/forum?id=Q5H3NCy18S" target="_blank" rel="noopener">Paper</a>
+            </div>
+          </div>
+          <div class="intg-showcase">
+            <div class="threeup">
+              <div class="threeup-cell">
+                <div class="threeup-vid">
+                  <video loop muted playsinline preload="metadata"
+                         src="https://spacer-ai.github.io/static/videos/source/baseline_0/paper_selfplay_nodrop_2a02131f75e5a3c3_sample0.mp4"></video>
+                </div>
+                <p class="threeup-cap">PPO</p>
+              </div>
+              <div class="threeup-cell">
+                <div class="threeup-vid">
+                  <video loop muted playsinline preload="metadata"
+                         src="https://spacer-ai.github.io/static/videos/source/baseline_0/paper_humanppo_2a02131f75e5a3c3_sample0.mp4"></video>
+                </div>
+                <p class="threeup-cap">HR-PPO</p>
+              </div>
+              <div class="threeup-cell">
+                <div class="threeup-vid">
+                  <div class="threeup-legend" aria-hidden="true">
+                    <span class="row"><span class="sw" style="background:#87CEEB"></span>Targeted Agent</span>
+                    <span class="row"><span class="sw" style="background:#7a7a7a"></span>Other Agents</span>
+                  </div>
+                  <video loop muted playsinline preload="metadata"
+                         src="https://spacer-ai.github.io/static/videos/source/baseline_0/paper_human_2a02131f75e5a3c3_sample0.mp4"></video>
+                </div>
+                <p class="threeup-cap">SPACeR</p>
+              </div>
+            </div>
+            <figure class="figure" style="margin:0">
+              <img src="assets/figures/spacer_arch.png" alt="SPACeR architecture: batched self-play rollouts anchored to a tokenized reference model via a KL term." loading="lazy">
+              <figcaption>SPACeR anchors decentralized self-play to a frozen tokenized reference model, balancing a task reward with a human-likeness KL term.</figcaption>
+            </figure>
+          </div>
+        </div>
+      </div>
+      <noscript>
+        <p class="muted">Enable JavaScript to browse the Terra Series.</p>
+      </noscript>
+    </div>
   </div>
 </section>
 

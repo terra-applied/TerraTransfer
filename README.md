@@ -5,7 +5,7 @@ Project website for **TerraTransfer: Learning End-to-End Driving Policies Withou
 Live at: https://zikang-xiong-ai.github.io/terratransfer
 
 Styled with the Applied Intuition brand design system, consistent with the
-[TerraZero](https://terrazero.github.io/) project page.
+[TerraZero](https://terra-applied.github.io/TerraZero/) project page.
 
 ## Structure
 
@@ -40,5 +40,5 @@ rollout videos. The code link is greyed out until release.
 
 ## Credit
 
-Design system shared with the [TerraZero project page](https://terrazero.github.io/)
+Design system shared with the [TerraZero project page](https://terra-applied.github.io/TerraZero/)
 (Applied Intuition brand).

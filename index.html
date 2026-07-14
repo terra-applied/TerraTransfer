@@ -86,7 +86,7 @@
 
     <div class="idea-statement">
       <p class="eyebrow" style="margin-top:var(--space-5)">The Idea</p>
-      <h2 class="idea-kinetic">Decouple learning to <span class="accent">drive</span><br>from learning to <span class="accent">see</span>.</h2>
+      <h2 class="idea-kinetic">Decouple learning to <span class="accent">drive</span><br>from learning to <span class="accent">see</span></h2>
       <p class="lead" style="max-width:56rem">Master driving first by <mark class="hl">self-play</mark> in a fast vectorized simulator &mdash; then let the agent see, by <mark class="hl">aligning a vision frontend</mark> to the skills it already has.</p>
     </div>
 
@@ -257,43 +257,6 @@
     </div>
   </div>
 
-  <div class="wide reveal" style="margin-top:var(--space-5)">
-    <div class="split">
-      <div class="split-text">
-        <h3 style="margin-top:0">Why a relational, low-rank loss?</h3>
-        <p>
-          The teacher&rsquo;s features are sharply <strong>low-rank</strong>: 9 of 64 directions (map) and
-          13 of 64 (partner) carry 80% of the energy. So the student never copies raw coordinates &mdash;
-          it only matches <em>which scenes the teacher treats as alike</em>, inside that informative subspace.
-        </p>
-        <div class="bars bars--mini">
-          <p class="bars-title">Structural target &rarr; HD-Score</p>
-          <div class="bar-row"><span class="bar-label">Lower rank (k<sub>p</sub>=7, k<sub>r</sub>=5)</span><span class="bar-track"><span class="bar-fill" style="--w:80%"></span></span><span class="bar-val">0.417</span></div>
-          <div class="bar-row is-ours"><span class="bar-label">Low-rank subspace (k<sub>p</sub>=13, k<sub>r</sub>=9)</span><span class="bar-track"><span class="bar-fill" style="--w:94%"></span></span><span class="bar-val">0.490</span></div>
-          <div class="bar-row"><span class="bar-label">Higher rank (k<sub>p</sub>=26, k<sub>r</sub>=18)</span><span class="bar-track"><span class="bar-fill" style="--w:93%"></span></span><span class="bar-val">0.484</span></div>
-          <div class="bar-row"><span class="bar-label">Full coordinate space</span><span class="bar-track"><span class="bar-fill" style="--w:85%"></span></span><span class="bar-val">0.444</span></div>
-        </div>
-      </div>
-      <figure class="figure">
-        <div class="figure-stage figure-stage--pad">
-          <svg viewBox="0 0 560 310" class="spectrum" role="img" aria-label="Singular value spectra of the teacher's features: energy concentrates in the first 9 (map) and 13 (partner) directions.">
-            <line x1="40" y1="262" x2="540" y2="262" stroke="#c9c9d0" stroke-width="1.5"/>
-            <line x1="40" y1="262" x2="40" y2="30" stroke="#c9c9d0" stroke-width="1.5"/>
-            <path d="M40,50 Q95,215 180,246 T540,258" fill="none" stroke="#006CFA" stroke-width="3"/>
-            <path d="M40,72 Q120,190 230,238 T540,256" fill="none" stroke="#7a7f8a" stroke-width="3"/>
-            <line x1="110" y1="262" x2="110" y2="60" stroke="#006CFA" stroke-width="1.5" stroke-dasharray="5 5"/>
-            <line x1="142" y1="262" x2="142" y2="80" stroke="#7a7f8a" stroke-width="1.5" stroke-dasharray="5 5"/>
-            <text x="116" y="52" class="sp-label sp-label--blue">k<tspan dy="4" font-size="11">r</tspan><tspan dy="-4">=9 &middot; map</tspan></text>
-            <text x="148" y="100" class="sp-label">k<tspan dy="4" font-size="11">p</tspan><tspan dy="-4">=13 &middot; partner</tspan></text>
-            <text x="290" y="292" class="sp-axis">singular-value index (of 64)</text>
-            <text x="26" y="150" class="sp-axis" transform="rotate(-90 26 150)">energy</text>
-            <text x="300" y="70" class="sp-note">80% of the energy lives in the first 9&ndash;13 directions</text>
-          </svg>
-        </div>
-        <figcaption><span class="fig-label">Teacher feature spectra.</span> Redrawn schematic; exact spectra in the paper.</figcaption>
-      </figure>
-    </div>
-  </div>
 </section>
 
 <!-- ===================== Results ===================== -->

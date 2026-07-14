@@ -900,3 +900,163 @@ td .tbd { font-size: 0.92em; }
 
 /* reference row in a data table (privileged-state teacher), set apart in italic */
 table.data tbody tr.is-ref td { font-style: italic; color: var(--gray); background: var(--gray-soft); }
+
+/* ==========================================================================
+   Video-style redesign: idea statement, dark diagram stages, bar charts,
+   collapsed details. Mirrors the TerraTransfer explainer video.
+   ========================================================================== */
+
+/* ----- The Idea ----- */
+.idea-kinetic {
+  font-family: "Applied Sans Display", system-ui, sans-serif;
+  font-weight: 700;
+  font-size: clamp(2.2rem, 5.5vw, 4.2rem);
+  line-height: 1.06;
+  letter-spacing: -0.02em;
+  margin: 0.4rem 0 1rem;
+}
+.idea-kinetic .accent { color: var(--blue); }
+
+.statline--tight { margin-top: var(--space-3); }
+.statline .stat-num sup { font-size: 0.55em; }
+.statline .stat-num.accent { color: var(--blue); }
+
+/* ----- collapsed details (abstract, full table) ----- */
+.abstract-details, .table-details { margin-top: var(--space-4); }
+.abstract-details summary, .table-details summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--blue);
+  padding: 0.6rem 0;
+  user-select: none;
+  width: fit-content;
+}
+.abstract-details summary:hover, .table-details summary:hover { text-decoration: underline; }
+.abstract-details[open] summary, .table-details[open] summary { margin-bottom: 0.4rem; }
+.abstract-details p { max-width: 68rem; }
+
+/* ----- dark diagram stage (matches the explainer video) ----- */
+.stage-dark {
+  background: #0A0A0B;
+  border-radius: 14px;
+  padding: clamp(12px, 2.4vw, 32px);
+  margin-top: var(--space-3);
+  box-shadow: 0 24px 60px rgba(0,0,0,0.18);
+  overflow: hidden;
+}
+.stage-dark .diagram { display: block; width: 100%; height: auto; }
+
+.diagram-lead { max-width: 62rem; color: var(--gray-strong, #444); }
+
+/* diagram foreignObject panels */
+.fo-panel {
+  position: relative; width: 100%; height: 100%;
+  border-radius: 8px; overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.2); background: #000;
+}
+.fo-panel > video { display: block; width: 100%; height: 100%; object-fit: cover; }
+.fo-grid2 {
+  display: grid; width: 100%; height: 100%;
+  grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 1px;
+  background: rgba(255,255,255,0.2);
+}
+.fo-grid2 video { display: block; width: 100%; height: 100%; object-fit: cover; }
+.fo-label {
+  position: absolute; top: 0; left: 0; right: 0; height: 34px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 12px; pointer-events: none;
+  background: linear-gradient(180deg, rgba(0,0,0,0.82), rgba(0,0,0,0));
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: 12px; letter-spacing: 0.06em; color: rgba(255,255,255,0.8);
+}
+.fo-label .fo-meta { color: #18FFFF; }
+
+/* diagram svg atoms */
+.diagram text {
+  font-family: "Applied Sans Text", system-ui, sans-serif;
+  text-anchor: middle;
+}
+.diagram .n-title { font-size: 26px; font-weight: 600; fill: #fff; font-family: "Applied Sans Display", system-ui, sans-serif; }
+.diagram .n-sub { font-size: 17px; fill: rgba(255,255,255,0.75); font-family: ui-monospace, Menlo, monospace; }
+.diagram .n-title--sm { font-size: 21px; }
+.diagram .n-sub--sm { font-size: 14px; }
+.diagram .node-train rect { fill: #006CFA; }
+.diagram .node-frozen rect { fill: rgba(255,255,255,0.05); stroke: rgba(255,255,255,0.28); }
+.diagram .node-frozen .n-title { fill: rgba(255,255,255,0.92); }
+.diagram .node-ghost rect { fill: rgba(255,255,255,0.028); stroke: rgba(255,255,255,0.16); }
+.diagram .node-ghost .n-title { fill: rgba(255,255,255,0.55); }
+.diagram .node-ghost .n-sub { fill: rgba(255,255,255,0.35); }
+.diagram .w-blue { stroke: #4B84FF; stroke-width: 2.5; fill: none; }
+.diagram .w-gray { stroke: rgba(255,255,255,0.35); stroke-width: 2.5; fill: none; }
+.diagram .w-ghost { stroke: rgba(255,255,255,0.22); stroke-width: 2.5; fill: none; }
+.diagram .w-loop { stroke: #4B84FF; stroke-width: 2.5; fill: none; opacity: 0.9; }
+.diagram .w-loss { stroke: #4B84FF; stroke-width: 2.5; fill: none; stroke-dasharray: 7 7; opacity: 0.9; }
+.diagram .ppo-chip rect { fill: #0A0A0B; stroke: rgba(0,108,250,0.65); }
+.diagram .ppo-chip text { font-size: 19px; letter-spacing: 0.04em; fill: #4B84FF; font-family: ui-monospace, Menlo, monospace; }
+.diagram .cont { fill: rgba(255,255,255,0.025); stroke: rgba(255,255,255,0.2); }
+.diagram .cont--ghost { fill: rgba(255,255,255,0.012); stroke: rgba(255,255,255,0.1); }
+.diagram .cont-label { font-size: 17px; letter-spacing: 0.12em; fill: rgba(255,255,255,0.6); text-anchor: start; font-family: ui-monospace, Menlo, monospace; }
+.diagram .cont-label--ghost { fill: rgba(255,255,255,0.3); }
+.diagram .chip-blue rect { fill: rgba(0,108,250,0.12); stroke: rgba(0,108,250,0.5); }
+.diagram .chip-blue text { font-size: 19px; fill: #4B84FF; font-family: ui-monospace, Menlo, monospace; }
+.diagram .chip-gray rect { fill: rgba(255,255,255,0.03); stroke: rgba(255,255,255,0.2); }
+.diagram .chip-gray text { font-size: 19px; fill: rgba(255,255,255,0.6); font-family: ui-monospace, Menlo, monospace; }
+.diagram .chip-ghost rect { fill: rgba(255,255,255,0.015); stroke: rgba(255,255,255,0.1); }
+.diagram .chip-ghost text { font-size: 19px; fill: rgba(255,255,255,0.32); font-family: ui-monospace, Menlo, monospace; }
+.diagram .loss-box rect { fill: rgba(10,10,11,0.92); stroke: rgba(0,108,250,0.55); }
+.diagram .loss-title { font-size: 22px; font-weight: 600; fill: #4B84FF; text-anchor: start; }
+.diagram .loss-sub { font-size: 16px; fill: rgba(255,255,255,0.6); text-anchor: start; }
+.diagram .legend text { font-size: 16px; fill: rgba(255,255,255,0.6); text-anchor: start; font-family: ui-monospace, Menlo, monospace; }
+
+/* ----- bar charts ----- */
+.bars { margin-top: var(--space-3); }
+.bars--results { max-width: 62rem; }
+.bars-title { font-weight: 600; margin: 0 0 0.6rem; color: var(--ink); }
+.bar-row {
+  display: grid;
+  grid-template-columns: minmax(9rem, 16rem) 1fr 4rem;
+  align-items: center; gap: 1rem;
+  padding: 0.34rem 0;
+}
+.bars--mini .bar-row { grid-template-columns: minmax(9rem, 15rem) 1fr 3.4rem; padding: 0.26rem 0; }
+.bar-label { font-size: 0.95rem; color: #444; }
+.bar-row.is-ours .bar-label { font-weight: 600; color: var(--ink); }
+.bar-row.is-ref .bar-label { color: var(--gray); font-style: italic; }
+.bar-label .ref-note { font-size: 0.82em; color: var(--gray); }
+.bar-track {
+  display: block; height: 18px; border-radius: 4px;
+  background: rgba(17,17,17,0.06); overflow: hidden;
+}
+.bars--mini .bar-track { height: 13px; }
+.bar-fill {
+  display: block; height: 100%; border-radius: 4px;
+  background: rgba(17,17,17,0.28); width: 0;
+  transition: width 0.9s cubic-bezier(0.16,1,0.3,1) 0.15s;
+}
+.bar-row.is-ours .bar-fill { background: var(--blue); }
+.bar-row.is-ref .bar-fill { background: repeating-linear-gradient(45deg, rgba(17,17,17,0.3) 0 6px, rgba(17,17,17,0.16) 6px 12px); }
+.reveal.in .bar-fill { width: var(--w); }
+html:not(.js) .bar-fill { width: var(--w); }
+.bar-val { font-variant-numeric: tabular-nums; font-weight: 600; font-size: 0.95rem; color: #444; text-align: right; }
+.bar-row.is-ours .bar-val { color: var(--blue); }
+
+/* ----- redrawn spectrum figure ----- */
+.figure-stage--pad { padding: clamp(8px, 2vw, 20px); }
+.spectrum { display: block; width: 100%; height: auto; }
+.spectrum .sp-label { font-size: 15px; fill: #7a7f8a; text-anchor: start; font-family: "Applied Sans Text", system-ui, sans-serif; }
+.spectrum .sp-label--blue { fill: var(--blue); }
+.spectrum .sp-axis { font-size: 14px; fill: #9a9aa2; text-anchor: middle; font-family: "Applied Sans Text", system-ui, sans-serif; }
+.spectrum .sp-note { font-size: 15px; fill: #444; text-anchor: middle; font-style: italic; font-family: "Applied Sans Text", system-ui, sans-serif; }
+
+@media (max-width: 720px) {
+  .bar-row { grid-template-columns: minmax(7rem, 10rem) 1fr 3.2rem; gap: 0.6rem; }
+  .statline--tight { grid-template-columns: 1fr 1fr; }
+}
+
+/* redesign polish */
+.statline .stat-cap { display: block; margin-top: 0.3rem; }
+@media (min-width: 721px) {
+  .statline--tight { grid-template-columns: repeat(4, 1fr); }
+}
+.diagram .chip-blue text, .diagram .chip-gray text, .diagram .chip-ghost text { font-size: 17px; }
+.diagram .ppo-chip text { font-size: 17px; }

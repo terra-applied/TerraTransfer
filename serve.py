@@ -26,7 +26,12 @@ ROOT = os.path.dirname(os.path.abspath(__file__))
 
 
 class Handler(http.server.SimpleHTTPRequestHandler):
-    """Static handler rooted at the repo, with no-cache so edits show on reload."""
+    """Static handler rooted at the repo, with no-cache so edits show on reload.
+
+    Supports HTTP Range requests so <video> seeking works in local preview
+    (SimpleHTTPRequestHandler alone always answers 200 with the full file,
+    which breaks the player's progress bar).
+    """
 
     extensions_map = {
         **http.server.SimpleHTTPRequestHandler.extensions_map,
@@ -39,7 +44,58 @@ class Handler(http.server.SimpleHTTPRequestHandler):
         ".woff2": "font/woff2",
     }
 
+    def send_head(self):
+        self._range = None
+        rng = self.headers.get("Range", "")
+        path = self.translate_path(self.path)
+        if not rng.startswith("bytes=") or os.path.isdir(path):
+            return super().send_head()
+        try:
+            f = open(path, "rb")
+        except OSError:
+            return super().send_head()
+        size = os.fstat(f.fileno()).st_size
+        spec = rng[len("bytes="):].split(",")[0].strip()
+        start_s, _, end_s = spec.partition("-")
+        try:
+            if start_s:
+                start = int(start_s)
+                end = int(end_s) if end_s else size - 1
+            else:  # suffix range: last N bytes
+                start = max(0, size - int(end_s))
+                end = size - 1
+        except ValueError:
+            f.close()
+            return super().send_head()
+        if start >= size:
+            f.close()
+            self.send_error(416, "Requested Range Not Satisfiable")
+            return None
+        end = min(end, size - 1)
+        self.send_response(206)
+        self.send_header("Content-Type", self.guess_type(path))
+        self.send_header("Content-Range", f"bytes {start}-{end}/{size}")
+        self.send_header("Content-Length", str(end - start + 1))
+        self.end_headers()
+        f.seek(start)
+        self._range = (start, end - start + 1)
+        return f
+
+    def copyfile(self, source, outputfile):
+        if getattr(self, "_range", None):
+            _, remaining = self._range
+            self._range = None
+            while remaining > 0:
+                chunk = source.read(min(64 * 1024, remaining))
+                if not chunk:
+                    break
+                outputfile.write(chunk)
+                remaining -= len(chunk)
+        else:
+            super().copyfile(source, outputfile)
+
     def end_headers(self):
+        self.send_header("Accept-Ranges", "bytes")
         self.send_header("Cache-Control", "no-store, max-age=0")
         super().end_headers()
 

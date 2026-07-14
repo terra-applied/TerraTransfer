@@ -30,7 +30,7 @@
       <span></span><span></span><span></span>
     </button>
     <nav class="nav" id="nav">
-      <a href="#abstract">Abstract</a>
+      <a href="#idea">The Idea</a>
       <a href="#method">Method</a>
       <a href="#results">Results</a>
       <a href="#qualitative">Rollouts</a>
@@ -74,8 +74,8 @@
   </div>
 </section>
 
-<!-- ===================== Teaser + Abstract ===================== -->
-<section id="abstract">
+<!-- ===================== Teaser + The Idea ===================== -->
+<section id="idea">
   <div class="wide reveal">
     <div class="video-frame teaser-frame">
       <video id="teaser-video" autoplay loop playsinline controls controlslist="nodownload" preload="metadata">
@@ -83,14 +83,21 @@
         Your browser does not support the video tag.
       </video>
     </div>
-    <p class="muted" style="margin-top:var(--space-2);text-align:center">
-      <strong>TerraTransfer</strong> learns to drive by self-play in <strong>TerraZero</strong>, then transfers
-      that competence to a vision policy &mdash; with no expert supervision at any stage.
-    </p>
 
-    <p class="eyebrow" style="margin-top:var(--space-5)">Abstract</p>
-    <h2>Decoupling Learning to Drive From Learning to See</h2>
-    <div>
+    <div class="idea-statement">
+      <p class="eyebrow" style="margin-top:var(--space-5)">The Idea</p>
+      <h2 class="idea-kinetic">Decouple learning to <span class="accent">drive</span><br>from learning to <span class="accent">see</span>.</h2>
+      <p class="lead" style="max-width:56rem">Master driving first by <mark class="hl">self-play</mark> in a fast vectorized simulator &mdash; then let the agent see, by <mark class="hl">aligning a vision frontend</mark> to the skills it already has.</p>
+    </div>
+
+    <div class="statline reveal">
+      <div><span class="stat-num">0</span><span class="stat-cap">expert demonstrations, at any stage</span></div>
+      <div><span class="stat-num">&asymp;2,535&nbsp;yrs</span><span class="stat-cap">of self-play driving experience (8&times;10<sup>11</sup> steps)</span></div>
+      <div><span class="stat-num">0.490</span><span class="stat-cap">HD-Score &mdash; beats every end-to-end baseline</span></div>
+    </div>
+
+    <details class="abstract-details" id="abstract">
+      <summary>Full abstract</summary>
       <p>
         End-to-end autonomous driving has achieved state-of-the-art performance on benchmarks
         and real-world deployments. Its standard training recipe, however, is expensive across
@@ -111,87 +118,180 @@
         closed-loop scenarios, the resulting end-to-end policy matches or exceeds prior
         end-to-end methods.
       </p>
-    </div>
+    </details>
   </div>
 </section>
 
 <!-- ===================== Method ===================== -->
 <section id="method">
   <div class="wide reveal">
-    <p class="eyebrow">Method</p>
-    <h2>A Two-Phase Pipeline</h2>
+    <p class="eyebrow">Method &middot; Phase 1</p>
+    <h2>Learn to drive &mdash; by self-play</h2>
+    <p class="diagram-lead">One shared policy controls <em>every</em> agent in <strong>TerraZero</strong>, our vectorized simulator. Trained with PPO, it learns from the long tail of its own behavior &mdash; collisions, near-misses, recoveries &mdash; <strong>never imitating a human</strong>.</p>
 
-    <div class="split split--rev">
-      <div class="split-text">
-        <p>
-          <strong>Phase&nbsp;1 &mdash; Learn to drive (self-play).</strong> A single policy is
-          trained end-to-end with PPO by multi-agent self-play in <strong>TerraZero</strong>, our
-          vectorized simulator. One shared parameter set controls every agent in the scene, so the
-          interaction distribution &mdash; collisions, near-misses, recoveries &mdash; co-evolves
-          with the policy. Ego, map, and partner encoders feed a shared trunk and an action head;
-          per-episode reward weights are sampled and exposed to the policy, yielding a single agent
-          that spans a continuum of driving preferences.
-        </p>
-        <p>
-          <strong>Phase&nbsp;2 &mdash; Learn to see (vision alignment).</strong> The Phase-1 policy
-          is frozen and used purely as a source of per-frame supervision. For each log frame, a
-          frozen DINOv3 backbone extracts image features, and two linear adapters map them to the
-          road and partner features the policy consumes, while the ego encoder and action head are
-          inherited and kept frozen. Two losses tie student to teacher: a <strong>structural loss</strong>
-          that matches the teacher's relational scene geometry within its low-rank subspace, and an
-          <strong>action loss</strong> (KL) on the output action distribution. No logged ego
-          trajectory is ever used as a supervision target. The two terms are complementary:
-          action-only reaches 0.319 and structural-only 0.307, but combined they reach
-          <strong>0.490</strong>.
-        </p>
-      </div>
-      <figure class="figure">
-        <div class="figure-stage">
-          <img src="assets/figures/pipeline.png" alt="TerraTransfer two-phase training pipeline" loading="lazy">
-        </div>
-        <figcaption><span class="fig-label">Figure 1.</span> Two-phase training pipeline. Flame icons mark trainable modules, snowflakes mark frozen ones; red arrows carry gradients, blue arrows do not.</figcaption>
-      </figure>
+    <div class="stage-dark reveal">
+      <svg class="diagram" viewBox="0 0 1600 620" role="img" aria-label="Phase 1: self-play videos feed ego, road and partner encoders, a shared MLP trunk and an action head; PPO actions feed back into the simulator.">
+        <defs>
+          <marker id="arr-b" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4B84FF"/></marker>
+          <linearGradient id="labelfade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="rgba(0,0,0,.82)"/><stop offset="1" stop-color="rgba(0,0,0,0)"/></linearGradient>
+        </defs>
+
+        <!-- self-play video 2x2 grid -->
+        <foreignObject x="30" y="40" width="580" height="326">
+          <div xmlns="http://www.w3.org/1999/xhtml" class="fo-panel">
+            <div class="fo-grid2">
+              <video muted loop playsinline autoplay preload="metadata" src="assets/videos/selfplay-3d-1.mp4"></video>
+              <video muted loop playsinline autoplay preload="metadata" src="assets/videos/selfplay-3d-2.mp4"></video>
+              <video muted loop playsinline autoplay preload="metadata" src="assets/videos/selfplay-3d-3.mp4"></video>
+              <video muted loop playsinline autoplay preload="metadata" src="assets/videos/selfplay-3d-4.mp4"></video>
+            </div>
+            <div class="fo-label"><span>TerraZero &middot; massively-parallel self-play</span><span class="fo-meta">8&times;10&sup1;&sup1; steps</span></div>
+          </div>
+        </foreignObject>
+
+        <!-- fan-out: panel -> encoders -->
+        <path d="M610,203 H668" class="w-blue"/>
+        <path d="M668,128 V388" class="w-blue"/>
+        <path d="M668,128 H692" class="w-blue" marker-end="url(#arr-b)"/>
+        <path d="M668,258 H692" class="w-blue" marker-end="url(#arr-b)"/>
+        <path d="M668,388 H692" class="w-blue" marker-end="url(#arr-b)"/>
+
+        <!-- encoders -->
+        <g class="node-train"><rect x="700" y="88" width="200" height="80" rx="8"/><text x="800" y="122" class="n-title">Ego encoder</text><text x="800" y="148" class="n-sub">MLP</text></g>
+        <g class="node-train"><rect x="700" y="218" width="200" height="80" rx="8"/><text x="800" y="252" class="n-title">Road encoder</text><text x="800" y="278" class="n-sub">DeepSets</text></g>
+        <g class="node-train"><rect x="700" y="348" width="200" height="80" rx="8"/><text x="800" y="382" class="n-title">Partner encoder</text><text x="800" y="408" class="n-sub">DeepSets</text></g>
+
+        <!-- fan-in: encoders -> trunk -->
+        <path d="M900,128 H960 M900,258 H960 M900,388 H960" class="w-blue"/>
+        <path d="M960,128 V388" class="w-blue"/>
+        <path d="M960,258 H1032" class="w-blue" marker-end="url(#arr-b)"/>
+
+        <g class="node-train"><rect x="1040" y="196" width="170" height="124" rx="8"/><text x="1125" y="250" class="n-title">Shared MLP</text><text x="1125" y="278" class="n-sub">trunk</text></g>
+        <path d="M1210,258 H1282" class="w-blue" marker-end="url(#arr-b)"/>
+        <g class="node-train"><rect x="1290" y="196" width="200" height="124" rx="8"/><text x="1390" y="250" class="n-title">Action Head</text><text x="1390" y="278" class="n-sub">&pi;(a&nbsp;|&nbsp;state)</text></g>
+
+        <!-- PPO loop back into the simulator -->
+        <path d="M1490,258 H1555 V540 H15 V203 H22" class="w-loop" marker-end="url(#arr-b)"/>
+        <g class="ppo-chip"><rect x="500" y="516" width="720" height="46" rx="6"/><text x="860" y="545">PPO &middot; actions fed back &rarr; interaction distribution co-evolves</text></g>
+      </svg>
     </div>
 
-    <div class="split" style="margin-top:var(--space-4)">
+    <div class="statline statline--tight reveal">
+      <div><span class="stat-num">8&times;10<sup>11</sup></span><span class="stat-cap">simulated steps</span></div>
+      <div><span class="stat-num">&asymp;23M</span><span class="stat-cap">driving hours</span></div>
+      <div><span class="stat-num">&asymp;2,535&nbsp;yrs</span><span class="stat-cap">of driving experience</span></div>
+      <div><span class="stat-num accent">0</span><span class="stat-cap">demonstrations</span></div>
+    </div>
+  </div>
+
+  <div class="wide reveal" style="margin-top:var(--space-5)">
+    <p class="eyebrow">Method &middot; Phase 2</p>
+    <h2>Learn to see &mdash; align a vision student to the frozen teacher</h2>
+    <p class="diagram-lead">The self-play policy is <strong>frozen</strong> and becomes the teacher. A DINOv3 encoder with a trained adapter maps camera images into the teacher&rsquo;s feature space &mdash; supervised by a <strong>feature alignment loss</strong> and an <strong>action KL loss</strong> on paired (image, scene-state) frames. <strong>No logged trajectory is ever a target.</strong></p>
+
+    <div class="stage-dark reveal">
+      <svg class="diagram" viewBox="0 0 1600 800" role="img" aria-label="Phase 2: a camera image flows through DINOv3 with a trained adapter into the frozen action head; the frozen self-play teacher consumes 3D vector state; feature alignment and action KL losses tie the two.">
+        <defs>
+          <marker id="arr-b2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#4B84FF"/></marker>
+          <marker id="arr-g2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="rgba(255,255,255,.35)"/></marker>
+        </defs>
+
+        <!-- legend -->
+        <g class="legend"><rect x="1236" y="38" width="16" height="16" rx="3" fill="#006CFA"/><text x="1260" y="51">Trainable</text><rect x="1370" y="38" width="16" height="16" rx="3" fill="rgba(255,255,255,.04)" stroke="rgba(255,255,255,.3)"/><text x="1394" y="51">Frozen</text></g>
+
+        <!-- top container: student -->
+        <rect x="20" y="20" width="1560" height="310" rx="12" class="cont"/>
+        <text x="44" y="56" class="cont-label">END-TO-END POLICY</text>
+
+        <foreignObject x="60" y="90" width="250" height="170">
+          <div xmlns="http://www.w3.org/1999/xhtml" class="fo-panel">
+            <video muted loop playsinline autoplay preload="metadata" src="assets/videos/camera.webm"></video>
+            <div class="fo-label"><span>Camera</span></div>
+          </div>
+        </foreignObject>
+        <path d="M310,175 H352" class="w-blue" marker-end="url(#arr-b2)"/>
+        <g class="node-train"><rect x="360" y="80" width="250" height="104" rx="8"/><text x="485" y="124" class="n-title">DINOv3 + Adapter</text><text x="485" y="152" class="n-sub">frozen backbone &middot; trained adapter</text></g>
+        <g class="node-frozen"><rect x="360" y="204" width="250" height="76" rx="8"/><text x="485" y="236" class="n-title">Ego encoder</text><text x="485" y="260" class="n-sub">inherited &middot; frozen</text></g>
+        <path d="M610,132 H672" class="w-blue" marker-end="url(#arr-b2)"/>
+        <path d="M610,242 H672" class="w-gray" marker-end="url(#arr-g2)"/>
+        <g class="chip-blue"><rect x="680" y="110" width="210" height="44" rx="5"/><text x="785" y="138">road + partner feat.</text></g>
+        <g class="chip-gray"><rect x="680" y="220" width="210" height="44" rx="5"/><text x="785" y="248">ego features</text></g>
+        <path d="M890,132 H950 M890,242 H950" class="w-gray"/>
+        <path d="M950,132 V242" class="w-gray"/>
+        <path d="M950,187 H1012" class="w-gray" marker-end="url(#arr-g2)"/>
+        <g class="node-frozen"><rect x="1020" y="125" width="200" height="124" rx="8"/><text x="1120" y="180" class="n-title">Action Head</text><text x="1120" y="208" class="n-sub">frozen</text></g>
+        <path d="M1220,187 H1282" class="w-blue" marker-end="url(#arr-b2)"/>
+        <g class="chip-blue"><rect x="1280" y="165" width="250" height="44" rx="5"/><text x="1405" y="193">driving actions</text></g>
+
+        <!-- bottom container: frozen teacher -->
+        <rect x="20" y="470" width="1560" height="310" rx="12" class="cont cont--ghost"/>
+        <text x="44" y="506" class="cont-label cont-label--ghost">SELF-PLAY TEACHER &middot; FROZEN</text>
+
+        <foreignObject x="60" y="540" width="250" height="170">
+          <div xmlns="http://www.w3.org/1999/xhtml" class="fo-panel">
+            <video muted loop playsinline autoplay preload="metadata" src="assets/videos/selfplay-3d-3.mp4"></video>
+            <div class="fo-label"><span>3D vector state</span></div>
+          </div>
+        </foreignObject>
+        <path d="M310,625 H335" class="w-ghost"/>
+        <path d="M335,545 V709" class="w-ghost"/>
+        <path d="M335,545 H352 M335,627 H352 M335,709 H352" class="w-ghost" marker-end="url(#arr-g2)"/>
+        <g class="node-ghost"><rect x="360" y="516" width="210" height="58" rx="8"/><text x="465" y="541" class="n-title n-title--sm">Ego encoder</text><text x="465" y="562" class="n-sub n-sub--sm">MLP &middot; frozen</text></g>
+        <g class="node-ghost"><rect x="360" y="598" width="210" height="58" rx="8"/><text x="465" y="623" class="n-title n-title--sm">Road encoder</text><text x="465" y="644" class="n-sub n-sub--sm">DeepSets &middot; frozen</text></g>
+        <g class="node-ghost"><rect x="360" y="680" width="210" height="58" rx="8"/><text x="465" y="705" class="n-title n-title--sm">Partner encoder</text><text x="465" y="726" class="n-sub n-sub--sm">DeepSets &middot; frozen</text></g>
+        <path d="M570,545 H610 M570,627 H610 M570,709 H610" class="w-ghost"/>
+        <path d="M610,545 V709" class="w-ghost"/>
+        <path d="M610,627 H672" class="w-ghost" marker-end="url(#arr-g2)"/>
+        <g class="chip-ghost"><rect x="680" y="605" width="210" height="44" rx="5"/><text x="785" y="633">teacher features</text></g>
+        <path d="M890,627 H1012" class="w-ghost" marker-end="url(#arr-g2)"/>
+        <g class="node-ghost"><rect x="1020" y="565" width="200" height="124" rx="8"/><text x="1120" y="620" class="n-title">Action Head</text><text x="1120" y="648" class="n-sub">frozen</text></g>
+        <path d="M1220,627 H1282" class="w-ghost" marker-end="url(#arr-g2)"/>
+        <g class="chip-ghost"><rect x="1280" y="605" width="250" height="44" rx="5"/><text x="1405" y="633">driving actions (state)</text></g>
+
+        <!-- loss couplings -->
+        <path d="M785,154 V605" class="w-loss"/>
+        <path d="M1405,209 V605" class="w-loss"/>
+        <g class="loss-box"><rect x="635" y="352" width="310" height="84" rx="6"/><text x="655" y="388" class="loss-title">Feature alignment loss</text><text x="655" y="416" class="loss-sub">relational geometry &middot; low-rank subspace</text></g>
+        <g class="loss-box"><rect x="1275" y="352" width="270" height="84" rx="6"/><text x="1295" y="388" class="loss-title">Action match loss (KL)</text><text x="1295" y="416" class="loss-sub">match action distribution</text></g>
+      </svg>
+    </div>
+  </div>
+
+  <div class="wide reveal" style="margin-top:var(--space-5)">
+    <div class="split">
       <div class="split-text">
-        <h3 style="margin-top:0">Why a low-rank, batch-relational loss?</h3>
+        <h3 style="margin-top:0">Why a relational, low-rank loss?</h3>
         <p>
-          The teacher's pooled map and partner features are sharply <strong>low-rank</strong>: though
-          parameterized in 64 dimensions, just 9 (map) and 13 (partner) directions capture 80% of their
-          energy. Naively matching all coordinates would force the vision student to fit the
-          structureless tail &mdash; the low-variance directions a good denoiser discards as noise.
+          The teacher&rsquo;s features are sharply <strong>low-rank</strong>: 9 of 64 directions (map) and
+          13 of 64 (partner) carry 80% of the energy. So the student never copies raw coordinates &mdash;
+          it only matches <em>which scenes the teacher treats as alike</em>, inside that informative subspace.
         </p>
-        <p>
-          So instead of copying the teacher's absolute coordinates, we match its <strong>relational
-          structure</strong>: within each batch we project both sides onto the teacher's top
-          singular directions, then align the matrix of pairwise scene-to-scene similarities. The
-          student only has to reproduce <em>which scenes the teacher treats as alike</em> &mdash; in the
-          subspace that actually carries information &mdash; leaving the coordinate frame and noisy tail free.
-        </p>
+        <div class="bars bars--mini">
+          <p class="bars-title">Structural target &rarr; HD-Score</p>
+          <div class="bar-row"><span class="bar-label">Lower rank (k<sub>p</sub>=7, k<sub>r</sub>=5)</span><span class="bar-track"><span class="bar-fill" style="--w:80%"></span></span><span class="bar-val">0.417</span></div>
+          <div class="bar-row is-ours"><span class="bar-label">Low-rank subspace (k<sub>p</sub>=13, k<sub>r</sub>=9)</span><span class="bar-track"><span class="bar-fill" style="--w:94%"></span></span><span class="bar-val">0.490</span></div>
+          <div class="bar-row"><span class="bar-label">Higher rank (k<sub>p</sub>=26, k<sub>r</sub>=18)</span><span class="bar-track"><span class="bar-fill" style="--w:93%"></span></span><span class="bar-val">0.484</span></div>
+          <div class="bar-row"><span class="bar-label">Full coordinate space</span><span class="bar-track"><span class="bar-fill" style="--w:85%"></span></span><span class="bar-val">0.444</span></div>
+        </div>
       </div>
       <figure class="figure">
-        <div class="figure-stage">
-          <img src="assets/figures/svd_latent_rank.png" alt="Singular value spectra of the teacher features" loading="lazy" style="width:50%">
+        <div class="figure-stage figure-stage--pad">
+          <svg viewBox="0 0 560 310" class="spectrum" role="img" aria-label="Singular value spectra of the teacher's features: energy concentrates in the first 9 (map) and 13 (partner) directions.">
+            <line x1="40" y1="262" x2="540" y2="262" stroke="#c9c9d0" stroke-width="1.5"/>
+            <line x1="40" y1="262" x2="40" y2="30" stroke="#c9c9d0" stroke-width="1.5"/>
+            <path d="M40,50 Q95,215 180,246 T540,258" fill="none" stroke="#006CFA" stroke-width="3"/>
+            <path d="M40,72 Q120,190 230,238 T540,256" fill="none" stroke="#7a7f8a" stroke-width="3"/>
+            <line x1="110" y1="262" x2="110" y2="60" stroke="#006CFA" stroke-width="1.5" stroke-dasharray="5 5"/>
+            <line x1="142" y1="262" x2="142" y2="80" stroke="#7a7f8a" stroke-width="1.5" stroke-dasharray="5 5"/>
+            <text x="116" y="52" class="sp-label sp-label--blue">k<tspan dy="4" font-size="11">r</tspan><tspan dy="-4">=9 &middot; map</tspan></text>
+            <text x="148" y="100" class="sp-label">k<tspan dy="4" font-size="11">p</tspan><tspan dy="-4">=13 &middot; partner</tspan></text>
+            <text x="290" y="292" class="sp-axis">singular-value index (of 64)</text>
+            <text x="26" y="150" class="sp-axis" transform="rotate(-90 26 150)">energy</text>
+            <text x="300" y="70" class="sp-note">80% of the energy lives in the first 9&ndash;13 directions</text>
+          </svg>
         </div>
-        <figcaption><span class="fig-label">Figure 2.</span> Singular-value spectra of the teacher's partner and map features; dashed lines mark the 80% cumulative-energy cutoffs (k<sub>p</sub>=13, k<sub>r</sub>=9).</figcaption>
+        <figcaption><span class="fig-label">Teacher feature spectra.</span> Redrawn schematic; exact spectra in the paper.</figcaption>
       </figure>
-    </div>
-
-    <p class="table-lead" style="margin-top:var(--space-4)"><em>Sweeping the projection rank confirms it: the low-rank subspace beats matching <em>all</em> coordinates, while too-low a rank discards useful geometry.</em></p>
-    <div class="table-wrap">
-      <table class="data">
-        <thead>
-          <tr><th>Structural target</th><th>HD-Score</th></tr>
-        </thead>
-        <tbody>
-          <tr><td>Lower rank (k<sub>p</sub>=7, k<sub>r</sub>=5)</td><td>0.417</td></tr>
-          <tr class="is-best"><td>Low-rank subspace (k<sub>p</sub>=13, k<sub>r</sub>=9, headline)</td><td>0.490</td></tr>
-          <tr><td>Higher rank (k<sub>p</sub>=26, k<sub>r</sub>=18)</td><td>0.484</td></tr>
-          <tr><td>Full coordinate space (all directions)</td><td>0.444</td></tr>
-        </tbody>
-        <caption><span class="fig-label">Table 1.</span> Projection-rank sweep for the structural target, scored by closed-loop HD-Score on HUGSim.</caption>
-      </table>
     </div>
   </div>
 </section>
@@ -200,47 +300,46 @@
 <section id="results">
   <div class="wide reveal">
     <p class="eyebrow">Results</p>
-    <h2>Closed-Loop Driving on HUGSim</h2>
-    <p>
-      We evaluate on <strong>HUGSim</strong>, a photorealistic 3D Gaussian-splatting closed-loop
-      benchmark over 88 nuScenes-derived scenarios across four difficulty tiers, and report the
-      aggregate closed-loop <strong>HD-Score</strong> (higher is better). Our vision policy is
-      aligned on nuPlan and evaluated on nuScenes scenarios, so these scores also reflect
-      cross-dataset generalization.
+    <h2>Matches or beats every end-to-end baseline</h2>
+    <p class="diagram-lead">Closed-loop <strong>HD-Score</strong> on <strong>HUGSim</strong> &mdash; 88 photorealistic 3D-Gaussian-splatting scenarios. Aligned on nuPlan, evaluated on nuScenes: the scores also reflect cross-dataset generalization.</p>
+
+    <div class="bars bars--results reveal">
+      <div class="bar-row"><span class="bar-label">UniAD</span><span class="bar-track"><span class="bar-fill" style="--w:40%"></span></span><span class="bar-val">0.224</span></div>
+      <div class="bar-row"><span class="bar-label">VAD</span><span class="bar-track"><span class="bar-fill" style="--w:43%"></span></span><span class="bar-val">0.239</span></div>
+      <div class="bar-row"><span class="bar-label">LTF</span><span class="bar-track"><span class="bar-fill" style="--w:64%"></span></span><span class="bar-val">0.360</span></div>
+      <div class="bar-row"><span class="bar-label">ECO (best variant)</span><span class="bar-track"><span class="bar-fill" style="--w:81%"></span></span><span class="bar-val">0.452</span></div>
+      <div class="bar-row is-ours"><span class="bar-label">TerraTransfer (ours)</span><span class="bar-track"><span class="bar-fill" style="--w:88%"></span></span><span class="bar-val">0.490</span></div>
+      <div class="bar-row is-ref"><span class="bar-label">Self-play teacher <span class="ref-note">(privileged state)</span></span><span class="bar-track"><span class="bar-fill" style="--w:93%"></span></span><span class="bar-val">0.520</span></div>
+    </div>
+
+    <p class="muted" style="max-width:60rem">
+      Within <strong>0.03</strong> of its own privileged teacher &mdash; with no logged-trajectory supervision.
+      The one exception is the strongly out-of-distribution <strong>Extreme</strong> tier, where our policy&rsquo;s
+      conservative responses preserve safety but sacrifice route completion.
     </p>
-    <div class="table-wrap">
-      <table class="data" id="tbl-hugsim">
-        <thead>
-          <tr>
-            <th>Method</th><th>Easy</th><th>Medium</th><th>Hard</th><th>Extreme</th><th>All</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td>UniAD</td><td>0.367</td><td>0.198</td><td>0.249</td><td>0.109</td><td>0.224</td></tr>
-          <tr><td>VAD</td><td>0.400</td><td>0.228</td><td>0.242</td><td>0.095</td><td>0.239</td></tr>
-          <tr><td>LTF</td><td>0.634</td><td>0.391</td><td>0.289</td><td>0.098</td><td>0.360</td></tr>
-          <tr><td>ECO (Smoothing-only)</td><td>0.764</td><td>0.416</td><td>0.405</td><td><strong>0.255</strong></td><td>0.452</td></tr>
-          <tr><td>ECO (Smoothing + Re-time)</td><td>0.720</td><td>0.388</td><td>0.342</td><td>0.236</td><td>0.415</td></tr>
-          <tr class="is-ref"><td>Self-play teacher (ref., privileged state)</td><td>0.780</td><td>0.497</td><td>0.639</td><td>0.185</td><td>0.520</td></tr>
-          <tr class="is-best"><td>TerraTransfer (Ours)</td><td><strong>0.769</strong></td><td><strong>0.501</strong></td><td><strong>0.560</strong></td><td>0.150</td><td><strong>0.490</strong></td></tr>
-        </tbody>
-        <caption><span class="fig-label">Table 2.</span> Closed-loop HD-Score on HUGSim (higher is better). <strong>Bold</strong> marks the best per column among comparison methods; the italicized self-play teacher drives from privileged vectorized state and is excluded from best-per-column counts.</caption>
-      </table>
-    </div>
-    <div>
-      <p class="muted">
-        Our vision policy is the strongest method on aggregate (<strong>0.490 All</strong>) &mdash; beating
-        the best imitation-trained baseline, LTF, by 0.130 and the strongest ECO variant by 0.038 &mdash;
-        while approaching its own teacher (0.520) <em>without any logged-trajectory supervision</em>.
-      </p>
-      <p class="muted">
-        The main exception is the <strong>Extreme</strong> tier, where ECO leads. These scenarios are
-        strongly <em>out of distribution</em>: surrounding vehicles may actively collide with the ego,
-        and in some cases pass through other vehicles before doing so. Our policy responds
-        conservatively, which preserves safe behavior but often sacrifices route completion &mdash; the
-        resulting low route completion pulls down the aggregate HD-Score on this split.
-      </p>
-    </div>
+
+    <details class="table-details">
+      <summary>Full per-tier table</summary>
+      <div class="table-wrap">
+        <table class="data" id="tbl-hugsim">
+          <thead>
+            <tr>
+              <th>Method</th><th>Easy</th><th>Medium</th><th>Hard</th><th>Extreme</th><th>All</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>UniAD</td><td>0.367</td><td>0.198</td><td>0.249</td><td>0.109</td><td>0.224</td></tr>
+            <tr><td>VAD</td><td>0.400</td><td>0.228</td><td>0.242</td><td>0.095</td><td>0.239</td></tr>
+            <tr><td>LTF</td><td>0.634</td><td>0.391</td><td>0.289</td><td>0.098</td><td>0.360</td></tr>
+            <tr><td>ECO (Smoothing-only)</td><td>0.764</td><td>0.416</td><td>0.405</td><td><strong>0.255</strong></td><td>0.452</td></tr>
+            <tr><td>ECO (Smoothing + Re-time)</td><td>0.720</td><td>0.388</td><td>0.342</td><td>0.236</td><td>0.415</td></tr>
+            <tr class="is-ref"><td>Self-play teacher (ref., privileged state)</td><td>0.780</td><td>0.497</td><td>0.639</td><td>0.185</td><td>0.520</td></tr>
+            <tr class="is-best"><td>TerraTransfer (Ours)</td><td><strong>0.769</strong></td><td><strong>0.501</strong></td><td><strong>0.560</strong></td><td>0.150</td><td><strong>0.490</strong></td></tr>
+          </tbody>
+          <caption><span class="fig-label">Closed-loop HD-Score on HUGSim (higher is better).</span> <strong>Bold</strong> marks the best per column among comparison methods; the self-play teacher drives from privileged vectorized state and is excluded.</caption>
+        </table>
+      </div>
+    </details>
   </div>
 </section>
 
@@ -248,8 +347,7 @@
 <section id="qualitative">
   <div class="wide reveal">
     <p class="eyebrow">Qualitative Rollouts</p>
-    <h2>Closed-Loop Rollout Videos</h2>
-    <p class="prose">Representative closed-loop rollouts of the end-to-end vision policy on HUGSim scenarios.</p>
+    <h2>Naturalistic driving across the long tail</h2>
     <div class="video-grid">
       <figure>
         <div class="video-frame"><video muted loop playsinline controls controlslist="nodownload" preload="metadata"><source src="assets/videos/1.mp4" type="video/mp4"></video></div>

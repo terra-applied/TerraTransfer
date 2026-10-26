@@ -1060,3 +1060,11 @@ html:not(.js) .bar-fill { width: var(--w); }
 }
 .diagram .chip-blue text, .diagram .chip-gray text, .diagram .chip-ghost text { font-size: 17px; }
 .diagram .ppo-chip text { font-size: 17px; }
+
+/* TerraTransfer++ announcement */
+.pp-banner {
+  display: inline-block; margin: 0 0 1rem; padding: .45rem .9rem;
+  border-radius: 999px; background: var(--blue-wash-2); color: var(--blue-dark);
+  font-size: .95rem;
+}
+.pp-banner:hover { background: var(--blue); color: #fff; }

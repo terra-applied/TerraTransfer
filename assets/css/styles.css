@@ -969,6 +969,9 @@ html:not(.js) .bar-fill { width: var(--w); }
 .pp-banner {
   display: inline-block; margin: 0 0 1rem; padding: .45rem .9rem;
   border-radius: 999px; background: var(--blue-wash-2); color: var(--blue-dark);
-  font-size: .95rem;
+  font-family: var(--font-sans); font-size: .9rem; line-height: 1.4;
+}
+@media (max-width: 600px) {
+  .pp-banner { display: block; border-radius: 12px; padding: .6rem .85rem; font-size: .85rem; }
 }
 .pp-banner:hover { background: var(--blue); color: #fff; }
